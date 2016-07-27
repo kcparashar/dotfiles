@@ -6,5 +6,10 @@ atom.symlink/compile-cache/
 atom.symlink/packages
 atom.symlink/storage
 atom.symlink/themes
+atom.symlink/
+
+go/
+ruby/
+xcode/
 
 git/gitconfig.local.symlink

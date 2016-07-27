@@ -1,41 +1,382 @@
-# shortcut to this dotfiles path is $ZSH
-export ZSH=$HOME/.dotfiles
+# Path to your oh-my-zsh installation.
+export ZSH=/Users/krishna/.oh-my-zsh
+export PATH=$PATH:/usr/local/go/bin
 
-# your project folder that we can `c [tab]` to
-export PROJECTS=~/Code
+eval "$(thefuck --alias)"
 
-# Stash your environment variables in ~/.localrc. This means they'll stay out
-# of your main dotfiles repository (which may be public, like this one), but
-# you'll have access to them in your scripts.
-if [[ -a ~/.localrc ]]
-then
-  source ~/.localrc
+
+#### ZSH ####
+
+# alias: zsh-reload ~ Load changes to zsh configuration
+alias zsh-reload="source ~/.zshrc"
+
+# alias: zsh-man ~ Good zsh man pages
+function zsh-man {
+  PAGER="less -g -s '+/^       "$1"'" man zshall
+}
+
+
+#### NAVIGATION ####
+
+# alias: dsh ~ Quick access to this file
+# alias dsh="vim ~/.zsh-config/aliases/development.sh"
+
+# alias: nsh ~ Quick access to this file
+alias nsh="vim ~/.zshrc"
+
+# alias: db ~ Go to my Dropbox
+alias db="cd ~/Dropbox"
+
+# alias: dl ~ Go to my Downloads
+alias dl="cd ~/Downloads"
+
+# alias: dt ~ Go to my desktop
+alias dt="cd ~/Desktop"
+
+# alias: ss ~ Go to Senior Year
+alias ss="cd ~/Dropbox/University/Senior"
+
+
+
+#### PROJECTS ####
+
+# alias: pj ~ Go to my project
+alias pj="cd ~/Documents/Projects"
+
+# alias: atrus ~ Go to the Atrus
+alias atrus="cd ~/Documents/Projects/atrus"
+
+# alias: resume ~ Go to Resume 
+alias resume="cd ~/Documents/Projects/resume"
+
+# alias: carpo ~ Go to Carpo
+alias carpo='cd ~/Documents/Projects/carpo'
+
+# alias: henry ~ Go to Henry
+alias henry='cd ~/Documents/Projects/henry'
+
+# alias: res ~ Go to Research
+alias res='cd ~/Documents/Projects/research/concept-tagging/'
+
+# alias: tag ~ Go to Tagging
+alias tag='cd ~/Documents/Projects/research/concept-tagging/tagging'
+
+
+
+
+
+
+#### APP LAUNCHER ####
+
+# alias os ~ Open in Sublime Text
+alias os="open -a Sublime\ Text"
+
+# alias oi ~ Open in iA Writer
+alias oi="o -a iA\ Writer"
+
+# alias oc ~ Open in Google Chrome
+alias oc="open -a Google\ Chrome"
+
+# alias om ~ Open Spotify
+alias om="open -a Spotify"
+
+# alias: m ~ Launch CMUS
+alias m="cmus"
+
+
+
+#### DEVELOPMENT ####
+
+# alias: mmv ~ Move multiple files with the magic of globbing
+autoload -U zmv
+alias mmv="noglob zmv -W"
+
+# alias: server ~ Run a simple Python server
+alias server="python -m SimpleHTTPServer"
+
+alias python="python"
+alias py3="python3"
+
+alias python="python"
+alias py="python"
+
+# alias: gdb ~ Pretend that I have gdb instead of lldb *sob*
+alias gdb="lldb"
+
+# alias t ~ Use the Touch Command
+alias t="touch"
+
+# alias: g ~ Run git
+alias g="git"
+
+# alias: h ~ Open my history
+alias h="history"
+
+# alias: j ~ List all current jobs
+alias j="jobs"
+
+# alias: v ~ Run vim
+alias vim="nvim"
+
+# alias: pl ~ Run PDFLatex
+alias pl="pdflatex"
+
+# alias: xe ~ Run xelatex
+alias xe="xelatex"
+
+# alias: download ~ Downloads a website
+alias download="cd ~/Downloads && wget -mk"
+
+
+# alias pgstart ~ Starts PostGreSQL Server
+alias pgstart='postgres -D /usr/local/var/postgres'
+
+# alias pgstop ~ Stops PostGreSQL Server
+alias pgstop='pg_ctl -D /usr/local/var/postgres stop -s -m fast'
+
+# alias: gd ~ Runs the "dev" command under Gulp
+alias gd='gulp dev'
+
+# alias: ipyn ~ Runs the iPython notebook command
+alias ipynb='ipython notebook'
+
+# alias: block ~ Blocks website using host file
+function block {
+  site="0.0.0.0         "$1
+  site_www="0.0.0.0         www."$1
+  blocked_site="$site\n$site_www"
+  $blocked_site >> /private/etc/hosts
+}
+
+alias tl="node ~/Dropbox/Projects/bessie/bessie.js"
+
+
+#### NETWORKING ####
+
+# alias: stark ~ Go to Stark
+alias sstark='ssh stark'
+
+# alias: ip ~ Get my current global IP address
+alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
+
+# alias: localip ~ Get my locally-set IP address
+alias localip="ipconfig getifaddr en1"
+
+# alias: whois ~ Run a whois lookup on a given URL
+alias whois="whois -h whois-servers.net"
+
+# alias: sniff ~ Sniff HTTP traffic
+alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
+
+# alias: httpdump ~ Dump all HTTP traffic
+alias httpdump="sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E \"Host\: .*|GET \/.*\""
+
+
+
+
+
+#### SYSTEM ####
+
+# Force cd and ls to be hidden in history.
+alias cd=" cd"
+alias ls=" ls"
+
+# Let aliases be sudo'ed
+alias sudo="sudo "
+
+# Detect which `ls` flavor is in use
+if ls --color > /dev/null 2>&1; then
+  colorflag="--color"
+else
+  colorflag="-G"
 fi
 
-# all of our zsh files
-typeset -U config_files
-config_files=($ZSH/**/*.zsh)
+# alias: cpu ~ Get current CPU usage
+alias cpu='top -o cpu'
 
-# load the path files
-for file in ${(M)config_files:#*/path.zsh}
-do
-  source $file
-done
+# alias: mem ~ Get current memory usage
+alias mem='top -o rsize'
 
-# load everything but the path and completion files
-for file in ${${config_files:#*/path.zsh}:#*/completion.zsh}
-do
-  source $file
-done
+# alias: cl ~ Copy output of last command to clipboard
+alias cl="fc -e - | pbcopy"
 
-# initialize autocomplete here, otherwise functions won't be loaded
-autoload -U compinit
-compinit
+# alias: .. ~ Go up one directory
+alias ..="cd .."
 
-# load every completion after autocomplete loads
-for file in ${(M)config_files:#*/completion.zsh}
-do
-  source $file
-done
+# alias: ... ~ Go up two directories
+alias ...="cd ../.."
 
-unset config_files
+# alias: .... ~ Go up three directories
+alias ....="cd ../../.."
+
+# alias: ..... ~ Go up four directories
+alias .....="cd ../../../.."
+
+# alias: cds ~ Go to the home directory and cls
+alias cds="cd && clear && ls"
+
+# alias: cls ~ Clear screen and list files
+alias cls="clear && ls"
+
+# alias: o ~ Run open
+alias o="open"
+
+# alias: oo ~ Open current directory
+alias oo="open ."
+
+
+
+
+
+#### UTILITIES ####
+
+# alias: tor ~ Good zsh man pages
+function tor {
+  scp $1 russki:torrents/Krishna
+}
+
+
+# Fix potentially broken commands
+command -v hd > /dev/null || alias hd="hexdump -C"
+command -v md5sum > /dev/null || alias md5sum="md5"
+command -v sha1sum > /dev/null || alias sha1sum="shasum"
+
+# alias: to ~ Interactive write to file.
+function to {
+    if [[ -z "$1" ]]; then
+        echo "Usage: to <file name>"
+    else
+        echo "Now writing out to $1. Type ^D to finish.\n"
+        cat >| $1
+    fi
+}
+
+# alias loc ~ Get the location of the given command.
+function loc {
+    if [[ -z "$1" ]]; then
+        echo "Usage: loc <command name>"
+    else
+        echo =$1
+    fi
+}
+
+# alias: about ~ See what an alias does
+alias about="which"
+
+# alias: gurl ~ Compressed curl
+alias gurl="curl --compressed"
+
+# alias: week ~ Get week number
+alias week="date +%V"
+
+# alias: update ~ Update OS X, Homebrew, Node.js, and Gems
+alias update="sudo softwareupdate -i -a; brew update; brew upgrade; brew cleanup; npm update npm -g; npm update -g; gem update"
+
+# alias: flush ~ Flush directory service cache
+alias flush="dscacheuti -flushcache && killall -HUP mDNSResponder"
+
+# alias: lscleanup ~ Cleanup LaunchServices
+alias lscleanup="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user && killall Finder"
+
+# alias: c ~ Trim new lines and copy to clipboard
+alias c="tr -d '\n' | pbcopy"
+
+# alias: cleanup ~ Recursively delete `.DS_Store` files
+alias cleanup="find . -type -f -name '*.DS_Store' -ls -delete"
+
+# alias: emptytrash ~ Empty the trash on all mounts and clear system logs
+alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash; sudo rm -rfv /private/var/log/asl/*.asl"
+
+# alias: show ~ Show hidden files in Finder
+alias show="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
+
+# alias: hide ~ Hide hidden files in Finder
+alias hide="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
+
+# alias: showdesktop ~ Show all desktop files
+alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
+
+# alias: hidedesktop ~ Hide all desktop files
+alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
+
+# alias: urlencode ~ URL-encode strings
+alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
+
+# alias: mergepdf ~ Merge PDFs [`mergepdf -o output.pdf input{1,2,3}.pdf`]
+alias mergepdf="/System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Resources/join.py"
+
+# alias: showspotlight ~ Show Spotlight
+alias showspotlight="sudo mdutil -a -i on"
+
+# alias: hidespotlight ~ Hide Spotlight
+alias hidespotlight="sudo mdutil -a -i off"
+
+# alias: plistbuddy ~ Better plist editing
+alias plistbuddy="/usr/libexec/PlistBuddy"
+
+# alias: map ~ Kickass map function
+alias map="xargs -n1"
+
+# alias: launchpad ~ Resets Launchpad
+alias launchpad="defaults write com.apple.dock ResetLaunchPad -bool true; killall Dock"
+
+
+
+#### OH MY ZSH PREFERENCES ####
+
+ZSH_THEME="robbyrussell"
+
+# Save each command's timestamp and duration.
+setopt EXTENDED_HISTORY
+
+# Incrementally append history instead of waiting for exit to write out.
+setopt INC_APPEND_HISTORY
+
+# Ignore duplicate commands.
+setopt HIST_IGNORE_ALL_DUPS
+
+# Ignore commands that start with a space.
+setopt HIST_IGNORE_SPACE
+
+# Reduce blanks in history.
+setopt HIST_REDUCE_BLANKS
+
+# Allow for history expansion.
+setopt HIST_VERIFY
+
+# Don't clobber files accidentally.
+setopt NOCLOBBER
+
+# Allow for automatic updates
+DISABLE_UPDATE_PROMPT=true
+
+# Uncomment the following line to use case-sensitive completion.
+# CASE_SENSITIVE="true"
+
+# Uncomment the following line to use hyphen-insensitive completion. Case
+# sensitive completion must be off. _ and - will be interchangeable.
+# HYPHEN_INSENSITIVE="true"
+
+# Uncomment the following line to disable bi-weekly auto-update checks.
+# DISABLE_AUTO_UPDATE="true"
+
+# Uncomment the following line to change how often to auto-update (in days).
+export UPDATE_ZSH_DAYS=7
+
+# Uncomment the following line to display red dots whilst waiting for completion.
+COMPLETION_WAITING_DOTS="true"
+
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+HIST_STAMPS="mm/dd/yyyy"
+
+# Add wisely, as too many plugins slow down shell startup.
+plugins=(git)
+
+# User configuration
+
+export PATH="/Users/krishna/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/local/CrossPack-AVR/bin:/usr/local/git/bin:/Library/TeX/texbin"
+
+source $ZSH/oh-my-zsh.sh
+
